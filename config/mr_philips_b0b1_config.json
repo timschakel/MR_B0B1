@@ -1,0 +1,53 @@
+{
+  "actions": {
+    "acqdatetime": {
+      "filters": {},
+      "params": {
+        "datetime_series_description": "t 2DFFE_B0"
+      }
+    },
+    "B0_tra": {
+    	"filters": {
+    	    "b0_series_description": "t 2DFFE_B0",
+    	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
+    	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
+    	},
+    	"params": {
+    	 "slicenumber": "3"
+    	}
+    },
+    "B0_tra_noshim": {
+    	"filters": {
+    		"b0_series_description": "t 2DFFE_B0_noshim",
+    	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
+    	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
+    	},
+    	"params": {
+    	 "slicenumber": "3"
+    	}
+    },
+    "B1_tra": {
+    	"filters": {
+    	    "b1_60_series_description": "t B1_60",
+    	    "b1_120_series_description": "t B1_120",
+            "ImageType": "['ORIGINAL', 'PRIMARY', 'M_SE', 'M', 'SE']"
+    	},
+    	"params": {
+    	 "slicenumber": "2",
+    	 "canny_sigma": "3",
+         "canny_low_threshold": "200",
+    	 "angle1": "60",
+    	 "angle2": "120"
+    	}
+    }
+  },
+  "cfgformat": "20220627",
+  "comments": {
+    "author": "Tim Schakel, UMCU",
+    "description": "WADQC 2 module to analyze a study with B0/B1 measurements",
+    "version": "0.1",
+    "params": {
+      "datetime_series_description": "REQUIRED. Series description for retreiving datetime"
+    }
+  }
+}
