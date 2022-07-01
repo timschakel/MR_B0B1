@@ -258,7 +258,7 @@ def B0_tra(data, results, action):
     results = b0_collect_results(results,scanori,seriesname,
                                  fname_fig1,fname_fig2,fname_fig3,
                                  rms_dsv100,rms_dsv200,rms_dsv300,rms_dsv350,
-                                 perc_stats,rms_phantom,pixelDims)
+                                 perc_stats,rms_phantom,pixelDims,basename)
     
 def B0_tra_noshim(data, results, action):
     print(">>> B0 TRA NOSHIM <<<")
@@ -335,5 +335,5 @@ def B0_tra_noshim(data, results, action):
     results = b0_collect_results(results,scanori,seriesname,
                                  fname_fig1,fname_fig2,fname_fig3,
                                  rms_dsv100,rms_dsv200,rms_dsv300,rms_dsv350,
-                                 perc_stats,rms_phantom,pixelDims)
+                                 perc_stats,rms_phantom,pixelDims,basename)
     

@@ -231,36 +231,36 @@ def b0_create_figure3(b0map_ppm,phantom,acqdate,acqtime,scanori,basename):
 def b0_collect_results(results,scanori,seriesname,
                        fname_fig1,fname_fig2,fname_fig3,
                        rms_dsv100,rms_dsv200,rms_dsv300,rms_dsv350,
-                       perc_stats,rms_phantom,pixelDims):
-    results.addString("B0 Orientation", scanori)
-    results.addString("B0 SeriesDescription", seriesname)
-    results.addObject("B0 Figure1",fname_fig1)
-    results.addObject("B0 Figure2",fname_fig2)
-    results.addObject("B0 Figure3",fname_fig3)
+                       perc_stats,rms_phantom,pixelDims,basename):
+    results.addString(basename + "Orientation", scanori)
+    results.addString(basename + "SeriesDescription", seriesname)
+    results.addObject(basename + "Figure1",fname_fig1)
+    results.addObject(basename + "Figure2",fname_fig2)
+    results.addObject(basename + "Figure3",fname_fig3)
     
     reportkeyvals = []
     for slice in range(pixelDims[2]):
         # results for the different slices
         idname = "_slice"+str(slice+1)
         
-        reportkeyvals.append( ("B0 RMS d10"+idname,rms_dsv100[slice]) )
-        reportkeyvals.append( ("B0 RMS d20"+idname,rms_dsv200[slice]) )
-        reportkeyvals.append( ("B0 RMS d30"+idname,rms_dsv300[slice]) )
-        reportkeyvals.append( ("B0 RMS d35"+idname,rms_dsv350[slice]) )
+        reportkeyvals.append( (basename + "RMS d10"+idname,rms_dsv100[slice]) )
+        reportkeyvals.append( (basename + "RMS d20"+idname,rms_dsv200[slice]) )
+        reportkeyvals.append( (basename + "RMS d30"+idname,rms_dsv300[slice]) )
+        reportkeyvals.append( (basename + "RMS d35"+idname,rms_dsv350[slice]) )
         
-        reportkeyvals.append( ("B0 p5 "+idname,perc_stats[slice,0]) )
-        reportkeyvals.append( ("B0 p25 "+idname,perc_stats[slice,1]) )
-        reportkeyvals.append( ("B0 p50 "+idname,perc_stats[slice,2]) )
-        reportkeyvals.append( ("B0 p75 "+idname,perc_stats[slice,3]) )
-        reportkeyvals.append( ("B0 p95 "+idname,perc_stats[slice,4]) )
+        reportkeyvals.append( (basename + "p5 "+idname,perc_stats[slice,0]) )
+        reportkeyvals.append( (basename + "p25 "+idname,perc_stats[slice,1]) )
+        reportkeyvals.append( (basename + "p50 "+idname,perc_stats[slice,2]) )
+        reportkeyvals.append( (basename + "p75 "+idname,perc_stats[slice,3]) )
+        reportkeyvals.append( (basename + "p95 "+idname,perc_stats[slice,4]) )
     
     #whole phantom results
-    reportkeyvals.append( ("B0 RMS phantom",rms_phantom[pixelDims[2]]) )
-    reportkeyvals.append( ("B0 p5 phantom",perc_stats[pixelDims[2],0]) )
-    reportkeyvals.append( ("B0 p25 phantom",perc_stats[pixelDims[2],1]) )
-    reportkeyvals.append( ("B0 p50 phantom",perc_stats[pixelDims[2],2]) )
-    reportkeyvals.append( ("B0 p75 phantom",perc_stats[pixelDims[2],3]) )
-    reportkeyvals.append( ("B0 p95 phantom",perc_stats[pixelDims[2],4]) )
+    reportkeyvals.append( (basename + "RMS phantom",rms_phantom[pixelDims[2]]) )
+    reportkeyvals.append( (basename + "p5 phantom",perc_stats[pixelDims[2],0]) )
+    reportkeyvals.append( (basename + "p25 phantom",perc_stats[pixelDims[2],1]) )
+    reportkeyvals.append( (basename + "p50 phantom",perc_stats[pixelDims[2],2]) )
+    reportkeyvals.append( (basename + "p75 phantom",perc_stats[pixelDims[2],3]) )
+    reportkeyvals.append( (basename + "p95 phantom",perc_stats[pixelDims[2],4]) )
     
     for key,val in reportkeyvals:
         results.addFloat(key, val)
