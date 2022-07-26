@@ -100,6 +100,11 @@ def B1_tra(data, results, action):
     
     b1_60_series_filter = {"SeriesDescription":filters.get(item)for item in ["b1_60_series_description"]}
     b1_60_series = applyFilters(data.series_filelist, b1_60_series_filter)
+    
+    if len(b1_60_series) < 1:
+        print("ERROR: B1 60 series not present")
+        return
+    
     dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_60_series[0],headers_only=False)
     if dcmInfile.info.FlipAngle == 60.0:
         b1_60_image_data = pixeldataIn[int(params['slicenumber'])-1,:,:]
@@ -108,6 +113,11 @@ def B1_tra(data, results, action):
     
     b1_120_series_filter = {"SeriesDescription":filters.get(item)for item in ["b1_120_series_description"]}
     b1_120_series = applyFilters(data.series_filelist, b1_120_series_filter)
+    
+    if len(b1_120_series) < 1:
+        print("ERROR: B1 120 series not present")
+        return
+    
     dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_120_series[0],headers_only=False)
     if dcmInfile.info.FlipAngle == 120.0:
         b1_120_image_data = pixeldataIn[int(params['slicenumber'])-1,:,:]
@@ -270,6 +280,13 @@ def B0_tra_noshim(data, results, action):
     type_b0_filter = {"ImageType":filters.get(item)for item in ["b0_image_type"]}
     type_M_filter = {"ImageType":filters.get(item)for item in ["M_image_type"]}
     data_series = applyFilters(data.series_filelist, b0_series_filter)
+    
+    # sometimes, the no_shim is not acquired: applyFilters will return an empyt list to data_series
+    # catch this and stop further analysis
+    if len(data_series) < 1:
+        print("ERROR: NO SHIM series not present")
+        return
+    
     data_series_b0 = applyFilters(data_series, type_b0_filter)
     data_series_M = applyFilters(data_series, type_M_filter)
     
