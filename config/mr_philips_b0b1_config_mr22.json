@@ -3,27 +3,27 @@
     "acqdatetime": {
       "filters": {},
       "params": {
-        "datetime_series_description": "t 2DFFE_B0"
+        "datetime_series_description": "t B0map"
       }
     },
     "B0_tra": {
     	"filters": {
-    	    "b0_series_description": "t 2DFFE_B0",
+    	    "b0_series_description": "t B0map",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
     	"params": {
-    	 "slicenumber": "2"
+    	 "slicenumber": "10"
     	}
     },
     "B0_tra_noshim": {
     	"filters": {
-    		"b0_series_description": "t 2DFFE_B0_noshim",
+    		"b0_series_description": "t B0map_noshim",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
     	"params": {
-    	 "slicenumber": "2"
+    	 "slicenumber": "10"
     	}
     },
     "B1_tra": {

@@ -227,6 +227,9 @@ def B0_tra(data, results, action):
     else:
         scanori = 'UNKNOWN'
 
+    # slicenumber
+    slicenumber = int(params['slicenumber'])
+    
     # define volumes for statistics
     # Load dimensions based on the number of rows, columns, and slices (along the Z axis)
     pixelDims = (int(dcmInfile.info.Rows), int(dcmInfile.info.Columns), dcmInfile.info[0x20011018].value)
@@ -261,7 +264,7 @@ def B0_tra(data, results, action):
     acqtime = dcmInfile.info.StudyTime
     fname_fig1 = b0_create_figure1(b0map, phantom, acqdate, acqtime, scanori,basename)
     fname_fig2 = b0_create_figure2(b0map_ppm,b0map,phantom,dsv100,dsv200,dsv300,
-                                   dsv350,acqdate,acqtime,imaging_frequency, scanori,basename)
+                                   dsv350,acqdate,acqtime,imaging_frequency, scanori,basename,slicenumber)
     fname_fig3 = b0_create_figure3(b0map_ppm, phantom, acqdate, acqtime, scanori,basename)
     
     # collect results
@@ -311,6 +314,9 @@ def B0_tra_noshim(data, results, action):
     else:
         scanori = 'UNKNOWN'
 
+    # slicenumber
+    slicenumber = int(params['slicenumber'])
+    
     # define volumes for statistics
     # Load dimensions based on the number of rows, columns, and slices (along the Z axis)
     pixelDims = (int(dcmInfile.info.Rows), int(dcmInfile.info.Columns), dcmInfile.info[0x20011018].value)
@@ -345,7 +351,7 @@ def B0_tra_noshim(data, results, action):
     acqtime = dcmInfile.info.StudyTime
     fname_fig1 = b0_create_figure1(b0map, phantom, acqdate, acqtime, scanori,basename)
     fname_fig2 = b0_create_figure2(b0map_ppm,b0map,phantom,dsv100,dsv200,dsv300,
-                                   dsv350,acqdate,acqtime,imaging_frequency, scanori,basename)
+                                   dsv350,acqdate,acqtime,imaging_frequency, scanori,basename,slicenumber)
     fname_fig3 = b0_create_figure3(b0map_ppm, phantom, acqdate, acqtime, scanori,basename)
     
     # collect results

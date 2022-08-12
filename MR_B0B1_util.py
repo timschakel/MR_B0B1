@@ -108,23 +108,33 @@ def b0_create_figure1(b0map,phantom,acqdate,acqtime,scanori,basename):
     fig1min = np.percentile(fig1data[fig1data != 0],5)
     fig1max = np.percentile(fig1data[fig1data != 0],95)
     filename = basename+scanori+'_figure1.jpg'
-    fig, axs = plt.subplots(ncols=5, nrows=1, sharey=True, sharex=True,
-                            constrained_layout=True, figsize=(10,3))
-    title = basename + scanori +" "+ acqdate +" "+ acqtime
-    fig.suptitle(title,fontsize=24)
     
-    for slice in np.arange(b0map.shape[2]):
-        ax = axs[slice]
+    nslices = b0map.shape[2]
+    plotcols = 5
+    if nslices <=5:
+        plotrange = np.arange(plotcols)
+    else:
+        plotstep = np.ceil(nslices/5)
+        plotrange = np.int0(np.arange(0,nslices,plotstep))
+        
+    fig, axs = plt.subplots(ncols=plotcols, nrows=1, figsize=(10,3))
+    title = basename + scanori +" "+ acqdate +" "+ acqtime
+    fig.suptitle(title,fontsize=20)
+    
+    n = 0
+    for slice in plotrange:
+        ax = axs[n]
         im = ax.imshow(fig1data[:,:,slice],cmap='hot',vmin=fig1min,vmax=fig1max)
         ax.set_title('Slice '+str(slice+1))
         ax.axis('off')
+        n = n+1
     
     fig.colorbar(im, shrink=0.6)
-    fig.savefig(filename,dpi=300)
+    fig.savefig(filename,dpi=150)
     return filename
 
 def b0_create_figure2(b0map_ppm,b0map,phantom,dsv100,dsv200,dsv300,
-                   dsv350,acqdate,acqtime,imaging_frequency,scanori,basename):
+                   dsv350,acqdate,acqtime,imaging_frequency,scanori,basename,slicenumber):
     # figure 2
     # Display the analysis on the center slice
     # mask of phantom, fieldmap in Hz, PPM map
@@ -132,14 +142,15 @@ def b0_create_figure2(b0map_ppm,b0map,phantom,dsv100,dsv200,dsv300,
     fig2data = b0map * phantom #masked image
     fig2min = np.percentile(fig2data[fig2data != 0],5)
     fig2max = np.percentile(fig2data[fig2data != 0],95)
-    
+
+    slice=slicenumber # center slice
     filename = basename+scanori+'_figure2.jpg'
-    fig, axs = plt.subplots(ncols=4, nrows=2, sharey=True, sharex=True,
-                            constrained_layout=True, figsize=(10,5))
-    title = basename+scanori +" "+ acqdate +" "+ acqtime + " results slice 3"
-    fig.suptitle(title,fontsize=24)
+    #fig, axs = plt.subplots(ncols=4, nrows=2, sharey=True, sharex=True,
+    #                        constrained_layout=True, figsize=(10,5))
+    fig, axs = plt.subplots(ncols=4, nrows=2,figsize=(10,5))
+    title = basename+scanori +" "+ acqdate +" "+ acqtime + " results slice "+str(slicenumber+1)
+    fig.suptitle(title,fontsize=20)
     
-    slice=2 # center slice
     ax = axs[0,0]
     im = ax.imshow(phantom[:,:,slice],cmap='gray')
     ax.set_title('Mask slice '+str(slice+1))
@@ -183,7 +194,9 @@ def b0_create_figure2(b0map_ppm,b0map,phantom,dsv100,dsv200,dsv300,
                    cmap='hot',vmin=fig2min/imaging_frequency,vmax=fig2max/imaging_frequency)
     ax.set_title('r=17.5cm')
     ax.axis('off')
-    fig.savefig(filename,dpi=300)
+    plt.tight_layout()
+    
+    fig.savefig(filename,dpi=150)
     return filename
 
 def b0_create_figure3(b0map_ppm,phantom,acqdate,acqtime,scanori,basename):
