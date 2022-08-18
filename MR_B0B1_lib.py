@@ -99,15 +99,26 @@ def B1_tra_AFI(data, results, action):
     filename = 'B1 TRA AFI.png'
     
     b1series_filter = {"SeriesDescription":filters.get(item)for item in ["b1_series_description"]}
-    b1series = applyFilters(data.series_filelist, b1series_filter)
+    b1series = applyFilters(data.series_filelist, b1series_filter)  
+    if len(b1series) < 1:
+        print("ERROR: t B1_AFI_50_150 series not present")
+        return
     
     type_B1_filter = {"ImageType":filters.get(item)for item in ["b1_imageType"]}
     b1map_series = applyFilters(b1series, type_B1_filter)
+    if len(b1map_series) < 1:
+        print("ERROR: t B1_AFI_50_150 series does not contain B1 map")
+        return
+    
     dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1map_series[0],headers_only=False)
     b1map = pixeldataIn[int(params['slicenumber'])-1,:,:]
     
     type_M_filter = {"ImageType":filters.get(item)for item in ["M_image_type"]}
     m_series = applyFilters(b1series, type_M_filter)
+    if len(b1map_series) < 1:
+        print("ERROR: t B1_AFI_50_150 series does not contain magnitude image")
+        return
+    
     dcmInfileM,pixeldataInM,dicomModeM = wadwrapper_lib.prepareInput(m_series[0],headers_only=False)
     m_image = pixeldataInM[int(params['slicenumber'])-1,:,:]
     
