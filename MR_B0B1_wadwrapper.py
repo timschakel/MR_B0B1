@@ -51,6 +51,8 @@ if __name__ == "__main__":
             MR_B0B1_lib.acqdatetime(data, results, action)
         elif name == 'B1_tra':
             MR_B0B1_lib.B1_tra(data, results, action)
+        elif name == 'B1_tra_AFI':
+            MR_B0B1_lib.B1_tra_AFI(data, results, action)
         elif name == 'B0_tra':
             MR_B0B1_lib.B0_tra(data, results, action)
         elif name == 'B0_tra_noshim':

@@ -91,6 +91,75 @@ def acqdatetime(data, results, action):
     datetime_series = data.getSeriesByDescription(params["datetime_series_description"])
     dt = wadwrapper_lib.acqdatetime_series(datetime_series[0][0])
     results.addDateTime('AcquisitionDateTime', dt) 
+
+def B1_tra_AFI(data, results, action):
+    print(">>> B1 TRA AFI <<<")
+    params = action["params"]
+    filters = action["filters"]
+    filename = 'B1 TRA AFI.png'
+    
+    b1series_filter = {"SeriesDescription":filters.get(item)for item in ["b1_series_description"]}
+    b1series = applyFilters(data.series_filelist, b1series_filter)
+    
+    type_B1_filter = {"ImageType":filters.get(item)for item in ["b1_imageType"]}
+    b1map_series = applyFilters(b1series, type_B1_filter)
+    dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1map_series[0],headers_only=False)
+    b1map = pixeldataIn[int(params['slicenumber'])-1,:,:]
+    
+    type_M_filter = {"ImageType":filters.get(item)for item in ["M_image_type"]}
+    m_series = applyFilters(b1series, type_M_filter)
+    dcmInfileM,pixeldataInM,dicomModeM = wadwrapper_lib.prepareInput(m_series[0],headers_only=False)
+    m_image = pixeldataInM[int(params['slicenumber'])-1,:,:]
+    
+    # calc some stats
+    x_center_px, y_center_px = find_center(m_image,params)
+    circ_rad = 150 / dcmInfile.info.PixelSpacing[0] # 15 cm radius
+    circ_mask = create_circular_mask(b1map,(np.int0(x_center_px),np.int0(y_center_px)),circ_rad)
+    b1_circ_mean = b1map[circ_mask].mean()
+    b1_circ_std = b1map[circ_mask].std()
+    
+    # create figures
+    fig, axs = plt.subplots(2,2,figsize=(12,6))
+    fig.suptitle('B1 TRA slice'+params['slicenumber'])
+    major_ticks_plotY = np.arange(90,111,5)
+    minor_ticks_plotY = np.arange(90,111,1)
+    major_ticks_plotX = np.arange(0,b1map.shape[0]+1,int(np.round(b1map.shape[0]/4)))
+    
+    axs[0,0].imshow(m_image,cmap='gray')
+    axs[0,0].set_title('Magnitude')
+    axs[0,0].axis('off')
+    
+    im = axs[0,1].imshow(b1map,vmin=90,vmax=110)
+    axs[0,1].set_title('B1 map [%]')
+    plt.colorbar(im, ax=axs[0,1], shrink=0.8)
+    axs[0,1].axis('off')
+    axs[0,1].axhline(x_center_px, c='r')
+    axs[0,1].axvline(y_center_px, c='k')
+    axs[0,1].add_patch(Circle([x_center_px,y_center_px],circ_rad,fc='magenta',lw=2,ec='magenta',alpha=0.3))
+    
+    axs[1,0].plot(b1map[np.int0(x_center_px),:], c='r')
+    axs[1,0].set_title('Midline')
+    axs[1,0].set_ylabel('B1 [%]')
+    axs[1,0].set_ylim([90,110])
+    axs[1,0].set_xticks(major_ticks_plotX)
+    axs[1,0].set_yticks(major_ticks_plotY)
+    axs[1,0].set_yticks(minor_ticks_plotY, minor=True)
+    axs[1,0].grid(which='minor', alpha=0.2,axis='y')
+    axs[1,0].grid(which='major', alpha=0.8,axis='both')
+    
+    axs[1,1].plot(b1map[:,np.int0(y_center_px)], c='k')
+    axs[1,1].set_title('Midline')
+    axs[1,1].set_ylim([90,110])
+    axs[1,1].set_xticks(major_ticks_plotX)
+    axs[1,1].set_yticks(major_ticks_plotY)
+    axs[1,1].set_yticks(minor_ticks_plotY, minor=True)
+    axs[1,1].grid(which='minor', alpha=0.2,axis='y')
+    axs[1,1].grid(which='major', alpha=0.8,axis='both')
+    
+    fig.savefig(filename,dpi=150)
+    results.addFloat("B1 mean", b1_circ_mean)
+    results.addFloat("B1 std", b1_circ_std)
+    results.addObject("B1 figure", filename)
     
 def B1_tra(data, results, action):
     print(">>> B1 TRA <<<")
