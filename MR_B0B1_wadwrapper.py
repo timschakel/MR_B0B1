@@ -28,8 +28,8 @@
 from wad_qc.module import pyWADinput
 import MR_B0B1_lib
 
-# import matplotlib
-# matplotlib.use('Agg') # Force matplotlib to not use any Xwindows backend.
+import matplotlib
+matplotlib.use('Agg') # Force matplotlib to not use any Xwindows backend.
 
 if __name__ == "__main__":
     data, results, config = pyWADinput()

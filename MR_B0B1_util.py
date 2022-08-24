@@ -35,7 +35,8 @@ def find_center(image_data,params):
     """
     alternative for retrieve_ellipse_parameters
     """
-    edges = detect_edges(image_data, int(params['canny_sigma']), int(params['canny_low_threshold']))
+    low_thresh = np.mean(np.nonzero(image_data))*0.1
+    edges = detect_edges(image_data, int(params['canny_sigma']), low_thresh)
     contours, hierarchy = cv2.findContours(edges.astype('uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     c = max(contours, key = cv2.contourArea) # select the biggest contour
     (center_x_pix,center_y_pix),radius_pix = cv2.minEnclosingCircle(c)

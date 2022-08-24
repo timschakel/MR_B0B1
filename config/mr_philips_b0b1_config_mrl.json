@@ -26,6 +26,20 @@
     	 "slicenumber": "2"
     	}
     },
+    "B1_tra": {
+    	"filters": {
+    	    "b1_60_series_description": "t B1_60",
+    	    "b1_120_series_description": "t B1_120",
+            "ImageType": "['ORIGINAL', 'PRIMARY', 'M_SE', 'M', 'SE']"
+    	},
+    	"params": {
+    	 "slicenumber": "2",
+    	 "canny_sigma": "3",
+         "canny_low_threshold": "200",
+    	 "angle1": "60",
+    	 "angle2": "120"
+    	}
+    },
     "B1_tra_AFI": {
     	"filters": {
     	    "b1_series_description": "t B1_AFI_50_150",

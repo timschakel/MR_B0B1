@@ -11,7 +11,7 @@ import numpy as np
 import pydicom
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
-
+import MR_B0B1_dcm_input
 from MR_B0B1_util import (find_center, create_circular_mask, create_spherical_mask,
                           calc_rms_stats, calc_percentile_stats, b0_create_figure1, 
                           b0_create_figure2, b0_create_figure3, b0_collect_results)
@@ -110,7 +110,8 @@ def B1_tra_AFI(data, results, action):
         print("ERROR: t B1_AFI_50_150 series does not contain B1 map")
         return
     
-    dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1map_series[0],headers_only=False)
+    #dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1map_series[0],headers_only=False)
+    dcmInfile,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(b1map_series[0],headers_only=False)
     b1map = pixeldataIn[int(params['slicenumber'])-1,:,:]
     
     type_M_filter = {"ImageType":filters.get(item)for item in ["M_image_type"]}
@@ -119,7 +120,8 @@ def B1_tra_AFI(data, results, action):
         print("ERROR: t B1_AFI_50_150 series does not contain magnitude image")
         return
     
-    dcmInfileM,pixeldataInM,dicomModeM = wadwrapper_lib.prepareInput(m_series[0],headers_only=False)
+    #dcmInfileM,pixeldataInM,dicomModeM = wadwrapper_lib.prepareInput(m_series[0],headers_only=False)
+    dcmInfileM,pixeldataInM,dicomModeM = MR_B0B1_dcm_input.prepareInput(m_series[0],headers_only=False)
     m_image = pixeldataInM[int(params['slicenumber'])-1,:,:]
     
     # calc some stats
@@ -185,7 +187,8 @@ def B1_tra(data, results, action):
         print("ERROR: B1 60 series not present")
         return
     
-    dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_60_series[0],headers_only=False)
+    #dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_60_series[0],headers_only=False)
+    dcmInfile,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(b1_60_series[0],headers_only=False)
     if dcmInfile.info.FlipAngle == 60.0:
         b1_60_image_data = pixeldataIn[int(params['slicenumber'])-1,:,:]
     else:
@@ -198,15 +201,16 @@ def B1_tra(data, results, action):
         print("ERROR: B1 120 series not present")
         return
     
-    dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_120_series[0],headers_only=False)
+    #dcmInfile,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(b1_120_series[0],headers_only=False)
+    dcmInfile,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(b1_120_series[0],headers_only=False)
     if dcmInfile.info.FlipAngle == 120.0:
         b1_120_image_data = pixeldataIn[int(params['slicenumber'])-1,:,:]
     else:
         raise Exception('Series for 120 does not have flip angle 120')
     
     # filter background
-    b1_60_image_data[ b1_60_image_data < 100 ] = 0
-    b1_120_image_data[ b1_120_image_data < 100 ] = 0
+    b1_60_image_data[ b1_60_image_data < np.mean(np.nonzero(b1_60_image_data))*0.1 ] = 0
+    b1_120_image_data[ b1_120_image_data < np.mean(np.nonzero(b1_120_image_data))*0.1 ] = 0
     
     # calc b1map
     tmp = np.divide(b1_120_image_data, (2 * b1_60_image_data), out=np.zeros_like(b1_120_image_data), where=b1_60_image_data!=0)
@@ -286,13 +290,15 @@ def B0_tra(data, results, action):
     data_series_b0 = applyFilters(data_series, type_b0_filter)
     data_series_M = applyFilters(data_series, type_M_filter)
     
-    dcmInfile,b0map,dicomMode = wadwrapper_lib.prepareInput(data_series_b0[0],headers_only=False)
-    dcmInfileM,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(data_series_M[0],headers_only=False)
+    #dcmInfile,b0map,dicomMode = wadwrapper_lib.prepareInput(data_series_b0[0],headers_only=False)
+    dcmInfile,b0map,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_b0[0],headers_only=False)
+    #dcmInfileM,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(data_series_M[0],headers_only=False)
+    dcmInfileM,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_M[0],headers_only=False)
     
     b0map = np.transpose(b0map,(1,2,0)) #transpose to x,y,z
     pixeldataIn = np.transpose(pixeldataIn,(1,2,0))
     
-    phantom = pixeldataIn > 200
+    phantom = pixeldataIn > np.mean(np.nonzero(pixeldataIn))*0.1
     imaging_frequency = dcmInfile.info.ImagingFrequency
     b0map_ppm = b0map / imaging_frequency
     
@@ -336,10 +342,10 @@ def B0_tra(data, results, action):
     rms_dsv300 = calc_rms_stats(b0map_ppm,dsv300)
     rms_dsv350 = calc_rms_stats(b0map_ppm,dsv350)
     rms_phantom = calc_rms_stats(b0map_ppm, phantom)
-    
+
     # calculate different percentile statistics for each slice
     perc_stats = calc_percentile_stats(b0map_ppm,phantom)
-    
+        
     acqdate = dcmInfile.info.StudyDate
     acqtime = dcmInfile.info.StudyTime
     fname_fig1 = b0_create_figure1(b0map, phantom, acqdate, acqtime, scanori,basename)
@@ -373,13 +379,15 @@ def B0_tra_noshim(data, results, action):
     data_series_b0 = applyFilters(data_series, type_b0_filter)
     data_series_M = applyFilters(data_series, type_M_filter)
     
-    dcmInfile,b0map,dicomMode = wadwrapper_lib.prepareInput(data_series_b0[0],headers_only=False)
-    dcmInfileM,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(data_series_M[0],headers_only=False)
+    #dcmInfile,b0map,dicomMode = wadwrapper_lib.prepareInput(data_series_b0[0],headers_only=False)
+    dcmInfile,b0map,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_b0[0],headers_only=False)
+    #dcmInfileM,pixeldataIn,dicomMode = wadwrapper_lib.prepareInput(data_series_M[0],headers_only=False)
+    dcmInfileM,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_M[0],headers_only=False)
     
     b0map = np.transpose(b0map,(1,2,0)) #transpose to x,y,z
     pixeldataIn = np.transpose(pixeldataIn,(1,2,0))
     
-    phantom = pixeldataIn > 200
+    phantom = pixeldataIn > np.mean(np.nonzero(pixeldataIn))*0.1
     imaging_frequency = dcmInfile.info.ImagingFrequency
     b0map_ppm = b0map / imaging_frequency
     
