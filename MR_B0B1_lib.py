@@ -272,7 +272,7 @@ def B1_tra(data, results, action):
     axs[1,2].grid(which='minor', alpha=0.2,axis='y')
     axs[1,2].grid(which='major', alpha=0.8,axis='both')
     
-    fig.savefig(filename,dpi=300)
+    fig.savefig(filename,dpi=150)
     results.addFloat("B1 mean", b1_circ_mean)
     results.addFloat("B1 std", b1_circ_std)
     results.addObject("B1 figure", filename)
