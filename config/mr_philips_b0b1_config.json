@@ -3,12 +3,12 @@
     "acqdatetime": {
       "filters": {},
       "params": {
-        "datetime_series_description": "t 2DFFE_B0"
+        "datetime_series_description": "t 2DFFE_B0 no shim"
       }
     },
     "B0_tra": {
     	"filters": {
-    	    "b0_series_description": "t 2DFFE_B0",
+    	    "b0_series_description": "t 2DFFE_B0 (gantry back to 0)",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},

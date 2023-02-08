@@ -36,25 +36,29 @@ def find_center(image_data,params):
     alternative for retrieve_ellipse_parameters
     """
     low_thresh = np.mean(np.nonzero(image_data))*0.1
-    edges = detect_edges(image_data, int(params['canny_sigma']), low_thresh)
+    high_thresh = np.mean(np.nonzero(image_data))*0.2
+    edges = detect_edges(image_data, int(params['canny_sigma']), low_thresh, high_thresh)
     contours, hierarchy = cv2.findContours(edges.astype('uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     c = max(contours, key = cv2.contourArea) # select the biggest contour
     (center_x_pix,center_y_pix),radius_pix = cv2.minEnclosingCircle(c)
     
     return center_x_pix, center_y_pix
 
-def create_circular_mask(image, center=None, radius=None):
-    (w,h) = image.shape
-    
-    if center is None: # use the middle of the image
-        center = (int(w/2), int(h/2))
-    if radius is None: # use the smallest distance between the center and image walls
-        radius = min(center[0], center[1], w-center[0], h-center[1])
+def create_circular_mask(shape, voxel_spacing=(1.0,1.0), center=None, radius=None):
+    # Create a cirucular mask for  height h, width w and depth d centered at center with given radius
+    w,h = shape
 
-    Y, X = np.ogrid[:h, :w]
-    dist_from_center = np.sqrt((X - center[0])**2 + (Y-center[1])**2)
+    if center is None:  # use the middle of the image
+        center = np.array(np.array(shape)/2,dtype=int)
 
-    mask = dist_from_center <= radius
+    if radius is None:  # use the smallest distance between the center and image walls
+        radius = min(center, shape-center)
+
+    Y,X=(np.ogrid[:w, :h])
+    dist_from_center = ((X - center[0]) * voxel_spacing[0] )** 2  +\
+                       ((Y - center[1]) * voxel_spacing[1]) ** 2
+
+    mask = dist_from_center <= radius ** 2
     return mask
 
 def create_spherical_mask(shape, voxel_spacing=(1.0,1.0,1.0), center=None, radius=None):

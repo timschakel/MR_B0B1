@@ -6,9 +6,11 @@
         "datetime_series_description": "t 2DFFE_B0 (gantry back to 0)"
       }
     },
-    "B0_tra": {
+    "B0_shim": {
     	"filters": {
-    	    "b0_series_description": "t 2DFFE_B0 (gantry back to 0)",
+    	    "b0_tra_series_description": "t 2DFFE_B0 (gantry back to 0)",
+    	    "b0_sag_series_description": "s 2DFFE_B0",
+    	    "b0_cor_series_description": "c 2DFFE_B0",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
@@ -16,9 +18,11 @@
     	 "slicenumber": "2"
     	}
     },
-    "B0_tra_noshim": {
+    "B0_noshim": {
     	"filters": {
-    		"b0_series_description": "t 2DFFE_B0 no shim",
+    	    "b0_tra_series_description": "t 2DFFE_B0 no shim",
+    	    "b0_sag_series_description": "s 2DFFE_B0 no shim",
+    	    "b0_cor_series_description": "c 2DFFE_B0 noshim",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
@@ -26,21 +30,25 @@
     	 "slicenumber": "2"
     	}
     },
-    "B1_tra": {
+    "B1_60_120": {
     	"filters": {
-    	    "b1_60_series_description": "t B1_60",
-    	    "b1_120_series_description": "t B1_120",
+    	    "b1_tra_60_series_description": "t B1_60",
+    	    "b1_tra_120_series_description": "t B1_120",
+    	    "b1_cor_60_series_description": "c B1_60",
+    	    "b1_cor_120_series_description": "c B1_120",
+    	    "b1_sag_60_series_description": "s B1_60",
+    	    "b1_sag_120_series_description": "s B1_120",
             "ImageType": "['ORIGINAL', 'PRIMARY', 'M_SE', 'M', 'SE']"
     	},
     	"params": {
-    	 "slicenumber": "2",
+    	 "slicenumber": "1",
     	 "canny_sigma": "3",
          "canny_low_threshold": "200",
     	 "angle1": "60",
     	 "angle2": "120"
     	}
     },
-    "B1_tra_AFI": {
+    "B1_AFI": {
     	"filters": {
     	    "b1_series_description": "t B1_AFI_50_150",
             "b1_imageType": "['ORIGINAL', 'PRIMARY', 'M_B1', 'M', 'B1']",
