@@ -42,6 +42,7 @@ if __name__ == "__main__":
     
     """
     Perform the analysis of the B0 and B1 measurements.
+    TODO: add Gantry B0
     """
     
     # read runtime parameters for module
@@ -50,11 +51,13 @@ if __name__ == "__main__":
             MR_B0B1_lib.acqdatetime(data, results, action)
         elif name == 'B1_60_120':
             MR_B0B1_lib.B1_60_120(data, results, action)
-        elif name == 'B1_tra_AFI':
-            MR_B0B1_lib.B1_tra_AFI(data, results, action)
+        elif name == 'B1_AFI':
+            MR_B0B1_lib.B1_AFI(data, results, action)
         elif name == 'B0_shim':
             MR_B0B1_lib.B0_shim(data, results, action)
         elif name == 'B0_noshim':
             MR_B0B1_lib.B0_noshim(data, results, action)
+        elif name == 'B0_gantry':
+            MR_B0B1_lib.B0_gantry(data, results, action)
 
     results.write()

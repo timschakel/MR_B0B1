@@ -11,6 +11,7 @@ import numpy as np
 import pydicom
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
+from skimage.restoration import unwrap_phase
 import MR_B0B1_dcm_input
 from MR_B0B1_util import (find_center, create_circular_mask, create_spherical_mask,
                           calc_rms_stats, calc_percentile_stats, b0_create_figure1, 
@@ -92,7 +93,7 @@ def acqdatetime(data, results, action):
     dt = wadwrapper_lib.acqdatetime_series(datetime_series[0][0])
     results.addDateTime('AcquisitionDateTime', dt) 
 
-def B1_tra_AFI(data, results, action):
+def B1_AFI(data, results, action):
     # Analyse B1 acquired with AFI
     # The scanner calculates B1 maps, here just read and get stats
     print(">>> B1 TRA AFI <<<")
@@ -102,7 +103,7 @@ def B1_tra_AFI(data, results, action):
     b1series_filter = {"SeriesDescription":filters.get(item)for item in ["b1_series_description"]}
     b1series = applyFilters(data.series_filelist, b1series_filter)  
     if len(b1series) < 1:
-        print("ERROR: t B1_AFI_50_150 series not present")
+        print(">>> B1_AFI_50_150 TRA not found <<<")
         return
     
     type_B1_filter = {"ImageType":filters.get(item)for item in ["b1_imageType"]}
@@ -137,10 +138,13 @@ def B1_tra_AFI(data, results, action):
     dsv350 = create_circular_mask(b1map.shape, voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
                                   center=(pixelDims[0]/2,pixelDims[1]/2), radius=radius)
     
+    b1map_masked = b1map * dsv350
+    b1map_masked = b1map_masked[np.nonzero(b1map_masked)]
+    
     # Get main results
-    mean_dsv350 = np.mean(b1map * dsv350)
-    std_dsv350 = np.std(b1map * dsv350)
-    range_dsv350 = np.percentile(b1map * dsv350, 99) - np.percentile(b1map * dsv350, 1)
+    mean_dsv350 = np.mean(b1map_masked)
+    std_dsv350 = np.std(b1map_masked)
+    range_dsv350 = np.percentile(b1map_masked, 99) - np.percentile(b1map_masked, 1)
     
     # create figures
     figtitle = 'B1 AFI [%] TRA '+dcmInfile.info.StudyDate+' '+dcmInfile.info.StudyTime
@@ -226,10 +230,13 @@ def process_B1(data_series_b1_60,data_series_b1_120,scanori,params,results):
     dsv350 = create_circular_mask(b1map.shape, voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
                                   center=(pixelDims[0]/2,pixelDims[1]/2), radius=radius)
     
+    b1map_masked = b1map * dsv350
+    b1map_masked = b1map_masked[np.nonzero(b1map_masked)]
+    
     # Get main results
-    mean_dsv350 = np.mean(b1map * dsv350)
-    std_dsv350 = np.std(b1map * dsv350)
-    range_dsv350 = np.percentile(b1map * dsv350, 99) - np.percentile(b1map * dsv350, 1)
+    mean_dsv350 = np.mean(b1map_masked)
+    std_dsv350 = np.std(b1map_masked)
+    range_dsv350 = np.percentile(b1map_masked, 99) - np.percentile(b1map_masked, 1)
     
     # create figures
     figtitle = 'B1 [%] '+scanori+' '+dcmInfile.info.StudyDate+' '+dcmInfile.info.StudyTime
@@ -362,10 +369,13 @@ def process_B0(data_series_b0,scanori,shim,params,results):
     dsv350 = create_circular_mask(b0map_ppm.shape, voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
                                   center=(pixelDims[0]/2,pixelDims[1]/2), radius=radius)
     
+    b0map_ppm_masked = b0map_ppm * dsv350
+    b0map_ppm_masked = b0map_ppm_masked[np.nonzero(b0map_ppm_masked)]
+    
     # Get main results
-    mean_dsv350 = np.mean(b0map_ppm * dsv350)
-    std_dsv350 = np.std(b0map_ppm * dsv350)
-    range_dsv350 = np.percentile(b0map_ppm * dsv350, 99) - np.percentile(b0map_ppm * dsv350, 1)
+    mean_dsv350 = np.mean(b0map_ppm_masked)
+    std_dsv350 = np.std(b0map_ppm_masked)
+    range_dsv350 = np.percentile(b0map_ppm_masked, 99) - np.percentile(b0map_ppm_masked, 1)
     
     # Create figure
     figtitle = 'B0 [ppm] '+shim+' '+scanori+' '+dcmInfile.info.StudyDate+' '+dcmInfile.info.StudyTime
@@ -455,4 +465,95 @@ def B0_noshim(data,results,action):
     else:
         scanori = 'SAG'
         results = process_B0(data_series_b0sag,scanori,shim,params,results)   
-  
+        
+def B0_gantry(data,results,action):
+    print(">>> B0 Gantry <<<")
+    params = action["params"]
+    filters = action["filters"]
+    slicenumber = int(params['slicenumber'])
+    tolerance = float(params['p99-p1_tolerance_ppm'])
+    
+    # Filter for Gantry B0
+    b0_gantry_filter = {"SeriesDescription":filters.get(item)for item in ["b0_gantry_series_description"]}
+    b0_gantry_data_series = applyFilters(data.series_filelist, b0_gantry_filter)
+    
+    if len(b0_gantry_data_series) < 1:
+        print(">>> B0 Gantry: Series not found <<<")
+        return
+    
+    # Filter for phase images
+    p_b0_gantry_filter = {"ImageType":filters.get(item)for item in ["P_image_type"]}
+    data_series = applyFilters(b0_gantry_data_series, p_b0_gantry_filter)
+    
+    dcmInfile,phase_maps,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series[0],headers_only=False)
+    phase_maps = np.reshape(phase_maps,(-1,3,256,256),'F') #reshape to [angles,slices,row,col]
+    
+    gantry_angles=[-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
+    
+    # Check number of different datasets found
+    if(phase_maps.shape[0] != 13):
+        print(">>> B0 Gantry: Incorrect number of datasets found <<<")
+        return
+    
+    # Set the reference phase map
+    phase_map_G0 = phase_maps[6]
+    
+    # Define mask (DSV) for analysis
+    # Load dimensions based on the number of rows, columns
+    pixelDims = (int(dcmInfile.info.Rows), int(dcmInfile.info.Columns))
+    
+    # Load spacing values (in mm)
+    pixelSpacing = (float(dcmInfile.info.PixelSpacing[0]), float(dcmInfile.info.PixelSpacing[1]))
+    
+    # Create mask
+    radius = 175
+    dsv350 = create_circular_mask(phase_map_G0[slicenumber].shape, voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
+                                  center=(pixelDims[0]/2,pixelDims[1]/2), radius=radius)
+    
+    range_dsv350 = []
+    for phase_map_Ga,angle in zip(phase_maps,gantry_angles):
+        
+        if angle == 0:
+            range_dsv350.append(0.0)
+        else:
+            #unwrap phase division by 1000 to bring phase (-pi,pi)
+            phase_Ga_unwrapped = unwrap_phase(phase_map_Ga[slicenumber]/1000.)
+            phase_Gref_unwrapped = unwrap_phase(phase_map_G0[slicenumber]/1000.)
+    
+            phase_diff=(phase_Ga_unwrapped-phase_Gref_unwrapped)
+        
+            #correct centre of unwrapping for factors of +/- 2pi
+            if abs(phase_diff[np.int0(pixelDims[0]/2),np.int0(pixelDims[1]/2)]) > np.pi:
+                phase_diff -= 2*np.pi*np.sign(phase_diff[np.int0(pixelDims[0]/2),np.int0(pixelDims[1]/2)])
+       
+            #apply mask
+            phase_masked = phase_diff * dsv350
+            phase_masked = phase_masked[np.nonzero(phase_masked)]
+            
+            # convert to ppm and calc range within mask
+            b0ppm = phase_masked/(2*np.pi*15.66*1e-3*63.88177)
+            range_dsv350.append(np.percentile(b0ppm, 99) - np.percentile(b0ppm, 1))
+            
+    # Check if output is within tolerance
+    range_dsv350 = np.array(range_dsv350)
+    angle_passed = range_dsv350 < tolerance
+    results.addBool('B0_Gantry_Passed',all(angle_passed))
+    
+    # Create figure
+    figtitle = 'B0 Gantry, difference with G0 [ppm] '+dcmInfile.info.StudyDate+' '+dcmInfile.info.StudyTime
+    fig, axs = plt.subplots(1,1,figsize=(7,6))
+    fig.suptitle(figtitle)
+    major_ticks_plotY = np.arange(0,0.51,0.1)
+    minor_ticks_plotY = np.arange(0,0.51,0.05)
+    major_ticks_plotX = np.arange(-180,181,30)
+    axs.plot(gantry_angles, range_dsv350,linewidth=2,marker='o',markersize=5)
+    axs.set_xticks(major_ticks_plotX)
+    axs.set_yticks(major_ticks_plotY)
+    axs.set_yticks(minor_ticks_plotY, minor=True)
+    axs.grid(which='minor', alpha=0.2,axis='y')
+    axs.grid(which='major', alpha=0.8,axis='both')
+    
+    filename = 'B0_Gantry.png'
+    fig.savefig(filename,dpi=150)
+    results.addObject("B0_Gantry_figure", filename)
+    

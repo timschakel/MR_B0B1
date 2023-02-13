@@ -29,6 +29,16 @@
     	"params": {
     	 "slicenumber": "2"
     	}
+    }, 
+    "B0_gantry": {
+    	"filters": {
+    	    "b0_gantry_series_description": "t Gantry_Dependent_B0_30_deg",
+    	    "P_image_type": "['ORIGINAL', 'PRIMARY', 'PHASE MAP', 'P', 'FFE']"
+    	},
+    	"params": {
+    	 "slicenumber": "1",
+    	 "p99-p1_tolerance_ppm": "0.5"
+    	}
     },
     "B1_60_120": {
     	"filters": {
