@@ -348,10 +348,9 @@ def process_B0(data_series_b0,scanori,shim,params,results):
     # Read the data
     dcmInfile,b0map,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_b0[0],headers_only=False)
     b0map = np.transpose(b0map,(1,2,0)) 
-    
+
     # Extract the correct slice
     slicenumber = int(params['slicenumber'])
-    b0map = b0map[:,:,slicenumber]
     
     # Convert to PPM
     imaging_frequency = dcmInfile.info.ImagingFrequency
@@ -366,21 +365,22 @@ def process_B0(data_series_b0,scanori,shim,params,results):
     
     # Create mask
     radius = 175
-    dsv350 = create_circular_mask(b0map_ppm.shape, voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
+    dsv350 = create_circular_mask(b0map_ppm.shape[:2], voxel_spacing=(pixelSpacing[0],pixelSpacing[1]), 
                                   center=(pixelDims[0]/2,pixelDims[1]/2), radius=radius)
     
-    b0map_ppm_masked = b0map_ppm * dsv350
-    b0map_ppm_masked = b0map_ppm_masked[np.nonzero(b0map_ppm_masked)]
+    # apply mask
+    for slice in np.arange(b0map_ppm.shape[2]):
+        b0map_ppm[~dsv350,slice] = np.nan
     
     # Get main results
-    mean_dsv350 = np.mean(b0map_ppm_masked)
-    std_dsv350 = np.std(b0map_ppm_masked)
-    range_dsv350 = np.percentile(b0map_ppm_masked, 99) - np.percentile(b0map_ppm_masked, 1)
+    mean_dsv350 = np.nanmean(b0map_ppm)
+    std_dsv350 = np.nanstd(b0map_ppm)
+    range_dsv350 = np.nanpercentile(b0map_ppm, 99) - np.nanpercentile(b0map_ppm, 1)
     
     # Create figure
     figtitle = 'B0 [ppm] '+shim+' '+scanori+' '+dcmInfile.info.StudyDate+' '+dcmInfile.info.StudyTime
     fig, axs = plt.subplots(1,1,figsize=(7,6))
-    pos = axs.imshow(b0map_ppm,vmin=-5,vmax=5)
+    pos = axs.imshow(b0map_ppm[:,:,slicenumber],vmin=-5,vmax=5)
     axs.add_patch(Circle([pixelDims[0]/2,pixelDims[1]/2],175/dcmInfile.info.PixelSpacing[0],fc='None',lw=2,ec='red'))  
     fig.suptitle(figtitle,fontsize=20)
     fig.colorbar(pos, ax=axs, label='[ppm]')

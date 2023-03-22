@@ -22,7 +22,7 @@
 # Changelog:
 #   20220629: Initial version
 #
-# runfile('/nfs/arch11/researchData/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1/MR_B0B1_wadwrapper.py', args='-r results.json -c config/module_config.json -d /nfs/arch11/researchData/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1/testdata/data1', wdir='/nfs/arch11/researchData/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1')
+# runfile('/smb/user/tschakel/BLD_RT_RESEARCH_DATA/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1/MR_B0B1_wadwrapper.py', args='-r results.json -c config/mr_philips_b0b1_config_mrl.json -d /smb/user/tschakel/BLD_RT_RESEARCH_DATA/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1/testdata/data6', wdir='/smb/user/tschakel/BLD_RT_RESEARCH_DATA/USER/tschakel/projects/wadqc/QAtests/MRI_B0B1/MR_B0B1')
 
 # this will fail unless wad_qc is already installed
 from wad_qc.module import pyWADinput
