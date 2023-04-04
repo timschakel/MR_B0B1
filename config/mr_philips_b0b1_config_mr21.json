@@ -1,33 +1,40 @@
 {
   "actions": {
     "acqdatetime": {
-      "filters": {},
+      "filters": {
+      	"datetime_filter_partial": {
+      		"SeriesDescription": "2DFFE_B0"
+        	}
+      },
       "params": {
-        "datetime_series_description": "t B0map_noshim"
+        "datetime_series_description": "t 2DFFE_B0_noshim",
+        "b0_partial_series_description": "2DFFE_B0"
       }
     },
     "B0_shim": {
     	"filters": {
-    	    "b0_tra_series_description": "t B0map",
-    	    "b0_sag_series_description": "s B0map",
-    	    "b0_cor_series_description": "c B0map",
+    	    "b0_tra_series_description": "t 2DFFE_B0",
+    	    "b0_sag_series_description": "s 2DFFE_B0",
+    	    "b0_cor_series_description": "c 2DFFE_B0",
+    	    "b0_partial_series_description": "2DFFE_B0",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
     	"params": {
-    	 "slicenumber": "10"
+    	 "slicenumber": "2"
     	}
     },
     "B0_noshim": {
     	"filters": {
-    	    "b0_tra_series_description": "t B0map_noshim",
-    	    "b0_sag_series_description": "s B0map_noshim",
-    	    "b0_cor_series_description": "c B0map_noshim",
+    	    "b0_tra_series_description": "t 2DFFE_B0_noshim",
+    	    "b0_sag_series_description": "s 2DFFE_B0_noshim",
+    	    "b0_cor_series_description": "c 2DFFE_B0_noshim",
+    	    "b0_partial_series_description": "2DFFE_B0",
     	    "b0_image_type": "['ORIGINAL', 'PRIMARY', 'B0 MAP', 'B0', 'UNSPECIFIED']",
     	    "M_image_type": "['ORIGINAL', 'PRIMARY', 'M_FFE', 'M', 'FFE']"
     	},
     	"params": {
-    	 "slicenumber": "10"
+    	 "slicenumber": "2"
     	}
     }, 
     "B1_60_120": {
@@ -38,6 +45,8 @@
     	    "b1_cor_120_series_description": "c B1_120",
     	    "b1_sag_60_series_description": "s B1_60",
     	    "b1_sag_120_series_description": "s B1_120",
+    	    "b1_partial_60_series_description": "B1_60",
+    	    "b1_partial_120_series_description": "B1_120",
             "ImageType": "['ORIGINAL', 'PRIMARY', 'M_SE', 'M', 'SE']"
     	},
     	"params": {

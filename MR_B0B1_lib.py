@@ -58,6 +58,41 @@ def isFiltered(ds, filters):
             return False
     return True
 
+def isFilteredContains(ds, filters):
+    """Return True if the Dataset `ds` complies to the `filters`,
+    otherwise return False.
+    """
+    for tag, value in filters.items():
+        if str(value) not in str(getValue(ds, tag)):
+        #if not str(getValue(ds, tag)).startswith(str(value)):
+        #if not str(getValue(ds, tag)) == str(value):
+            # Convert both values to string before comparison. Reason is that
+            # pydicom can return 'str', 'int' or 'dicom.valuerep' types of data.
+            # Similarly, the user (or XML) supplied value can be of any type.
+            return False
+    return True
+
+def flatten(nestedlist):
+    """Flatten a list of lists"""
+    return [item for sublist in nestedlist for item in sublist]
+
+def getInstanceByTagsPartial(data, filters):
+    """Return a list of dicom instances which satisfy the specified filters.
+
+    filters: dictionary where each key, value pair is a pydicom DataElement
+        name or tag number and the corresponding filter
+
+    Example:
+    myfilter = {
+        "ExposureTime": "100",
+        "PatientName": "WAD",
+        (0x0018,0x1405): "13"
+    }
+    """
+    func = lambda fn: pydicom.read_file(fn)
+    
+    instances = (func(fn) for fn in flatten(data.series_filelist))
+    return [ds for ds in instances if isFilteredContains(ds, filters)]
 
 def applyFilters(series_filelist, filters):
     """Apply `filters` to the `series_filelist` and return the filtered list.
@@ -89,8 +124,17 @@ def acqdatetime(data, results, action):
     Get the date and time of acquisition
     """
     params = action["params"]
+    filters = action["filters"]
     datetime_series = data.getSeriesByDescription(params["datetime_series_description"])
-    dt = wadwrapper_lib.acqdatetime_series(datetime_series[0][0])
+    
+    # Add an exception for when the user does not follow the instructions
+    # Try some partial matching on the scan names
+    if len(datetime_series) < 1:
+        datetime_series = getInstanceByTagsPartial(data,filters["datetime_filter_partial"])
+        dt = wadwrapper_lib.acqdatetime_series(datetime_series[0])
+    else:
+       dt = wadwrapper_lib.acqdatetime_series(datetime_series[0][0])
+       
     results.addDateTime('AcquisitionDateTime', dt) 
 
 def B1_AFI(data, results, action):
@@ -201,16 +245,32 @@ def process_B1(data_series_b1_60,data_series_b1_120,scanori,params,results):
     
     # Read the data and undo the scaling
     dcmInfile,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_b1_60[0],headers_only=False)
+    if not "RescaleSlope" in dcmInfile.info:
+        # if slope is not present, private tags
+        # look at the scaling in the reader function. there are differences between enhanced and normal
+        # due to changes in the dicomformat sent from the scanners, these exceptions for missing dicomtags are required
+        # should only be needed for the historic data.
+        print("Getting Slope/Intercept from private tags")
+        dcmInfile.info.RescaleSlope = dcmInfile.info[0x2005,0x100e].value
+        dcmInfile.info.RescaleIntercept = dcmInfile.info[0x2005,0x100d].value
+
     slope60 = dcmInfile.info.RescaleSlope
     inter60 = dcmInfile.info.RescaleIntercept
     pixeldataIn = np.transpose(pixeldataIn,(1,2,0)) 
     b1_60_image_data = (pixeldataIn[:,:,slicenumber] - inter60) / slope60
-    
+            
     dcmInfile,pixeldataIn,dicomMode = MR_B0B1_dcm_input.prepareInput(data_series_b1_120[0],headers_only=False)
+    if not "RescaleSlope" in dcmInfile.info:
+        # if slope is not present, private tags
+        print("Getting Slope/Intercept from private tags")
+        dcmInfile.info.RescaleSlope = dcmInfile.info[0x2005,0x100e].value
+        dcmInfile.info.RescaleIntercept = dcmInfile.info[0x2005,0x100d].value
+        
     slope120 = dcmInfile.info.RescaleSlope
     inter120 = dcmInfile.info.RescaleIntercept
     pixeldataIn = np.transpose(pixeldataIn,(1,2,0)) 
     b1_120_image_data = (pixeldataIn[:,:,slicenumber] - inter120) / slope120
+    
     
     # calc b1map
     # return result of calculation; eps is added for numerical stability

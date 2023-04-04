@@ -1,0 +1,341 @@
+{
+    "comments": {
+        "author": "Tim Schakel, UMCU",
+        "creator": "Manual",
+        "description": "B0 and B1 phantom test and analysis"
+    },
+    "metaformat": "20220701",
+    "results": {
+        "AcquisitionDateTime": {
+            "constraint_period": 30,
+            "description": "date and time of acquisition",
+            "display_level": 2,
+            "display_name": "DateTime",
+            "units": ""
+        },
+        "B0_SHIM_TRA_mean": {
+            "description": "B0_SHIM_TRA_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_TRA_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                -0.88,
+				-0.83,
+				-0.43,
+				-0.38
+            ]
+        },
+        "B0_SHIM_TRA_std": {
+            "description": "B0_SHIM_TRA_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_TRA_std",
+            "units": "ppm"
+        },
+        "B0_SHIM_TRA_p99-p1": {
+            "description": "B0_SHIM_TRA_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_TRA_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                1.44,
+                1.58,
+                2.74,
+                2.89
+            ]
+        },
+        "B0_SHIM_TRA_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B0_SHIM_COR_mean": {
+            "description": "B0_SHIM_COR_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_COR_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                0.15,
+                0.18,
+                0.42,
+                0.45
+            ]
+        },
+        "B0_SHIM_COR_std": {
+            "description": "B0_SHIM_COR_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_COR_std",
+            "units": "ppm"
+        },
+        "B0_SHIM_COR_p99-p1": {
+            "description": "B0_SHIM_COR_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_COR_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+				0.75,        
+                0.86,
+                1.74,
+                1.85
+            ]
+        },
+        "B0_SHIM_COR_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B0_SHIM_SAG_mean": {
+            "description": "B0_SHIM_SAG_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_SAG_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                0.24,
+                0.25,
+                0.33,
+                0.34
+            ]
+        },
+        "B0_SHIM_SAG_std": {
+            "description": "B0_SHIM_SAG_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_SAG_std",
+            "units": "ppm"
+        },
+        "B0_SHIM_SAG_p99-p1": {
+            "description": "B0_SHIM_SAG_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_SHIM_SAG_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+				0.97,         
+                1.03,
+                1.55,
+                1.62
+            ]
+        },
+        "B0_SHIM_SAG_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B0_NOSHIM_TRA_mean": {
+            "description": "B0_NOSHIM_TRA_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_TRA_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                -0.88,
+				-0.83,
+				-0.43,
+				-0.38
+            ]
+        },
+        "B0_NOSHIM_TRA_std": {
+            "description": "B0_NOSHIM_TRA_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_TRA_std",
+            "units": "ppm"
+        },
+        "B0_NOSHIM_TRA_p99-p1": {
+            "description": "B0_NOSHIM_TRA_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_TRA_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                1.44,
+                1.58,
+                2.74,
+                2.89
+            ]
+        },
+        "B0_NOSHIM_TRA_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B0_NOSHIM_COR_mean": {
+            "description": "B0_NOSHIM_COR_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_COR_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                0.15,
+                0.18,
+                0.42,
+                0.45
+            ]
+        },
+        "B0_NOSHIM_COR_std": {
+            "description": "B0_NOSHIM_COR_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_COR_std",
+            "units": "ppm"
+        },
+        "B0_NOSHIM_COR_p99-p1": {
+            "description": "B0_NOSHIM_COR_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_COR_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+				0.75,           
+                0.86,
+                1.74,
+                1.85
+            ]
+        },
+        "B0_NOSHIM_COR_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B0_NOSHIM_SAG_mean": {
+            "description": "B0_NOSHIM_SAG_mean slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_SAG_mean",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+                0.24,
+                0.25,
+                0.33,
+                0.34
+            ]
+        },
+        "B0_NOSHIM_SAG_std": {
+            "description": "B0_NOSHIM_SAG_std slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_SAG_std",
+            "units": "ppm"
+        },
+        "B0_NOSHIM_SAG_p99-p1": {
+            "description": "B0_NOSHIM_SAG_p99-p1 slice3 dsv350",
+            "display_level": 2,
+            "display_name": "B0_NOSHIM_SAG_p99-p1",
+            "units": "ppm",
+            "constraint_minlowhighmax": [
+				0.97,       
+                1.03,
+                1.55,
+                1.62
+            ]
+        },
+        "B0_NOSHIM_SAG_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B1_TRA_mean": {
+            "description": "B1_TRA_mean slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_TRA_mean",
+            "units": "%",
+            "constraint_minlowhighmax": [
+            	75.0,
+                80.0,
+                100.0,
+                105.0
+            ]
+        },
+        "B1_TRA_std": {
+            "description": "B1_TRA_std slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_TRA_std",
+            "units": "%"
+        },
+        "B1_TRA_p99-p1": {
+            "description": "B1_TRA_p99-p1 slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_TRA_p99-p1",
+            "units": "%",
+            "constraint_minlowhighmax": [
+                4.0,
+                5.0,
+                15.0,
+                16.0
+            ]
+        },
+        "B1_TRA_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B1_COR_mean": {
+            "description": "B1_COR_mean slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_COR_mean",
+            "units": "%",
+            "constraint_minlowhighmax": [
+                75.0,
+                80.0,
+                100.0,
+                105.0
+            ]
+        },
+        "B1_COR_std": {
+            "description": "B1_COR_std slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_COR_std",
+            "units": "%"
+        },
+        "B1_COR_p99-p1": {
+            "description": "B1_COR_p99-p1 slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_COR_p99-p1",
+            "units": "%",
+            "constraint_minlowhighmax": [
+				20.0,         
+                25.0,
+                45.0,
+                50.0
+            ]
+        },
+        "B1_COR_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        },
+        "B1_SAG_mean": {
+            "description": "B1_SAG_mean slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_SAG_mean",
+            "units": "%",
+            "constraint_minlowhighmax": [
+                75.0,
+                80.0,
+                100.0,
+                105.0
+            ]
+        },
+        "B1_SAG_std": {
+            "description": "B1_SAG_std slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_SAG_std",
+            "units": "%"
+        },
+        "B1_SAG_p99-p1": {
+            "description": "B1_SAG_p99-p1 slice2 dsv350",
+            "display_level": 2,
+            "display_name": "B1_SAG_p99-p1",
+            "units": "%",
+            "constraint_minlowhighmax": [
+				20.0,         
+                25.0,
+                45.0,
+                50.0
+            ]
+        },
+        "B1_SAG_figure": {
+            "description": "",
+            "display_level": 2,
+            "display_name": "",
+            "units": ""
+        }
+    }
+}

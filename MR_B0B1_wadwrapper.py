@@ -42,7 +42,6 @@ if __name__ == "__main__":
     
     """
     Perform the analysis of the B0 and B1 measurements.
-    TODO: add Gantry B0
     """
     
     # read runtime parameters for module
