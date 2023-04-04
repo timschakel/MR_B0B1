@@ -18,7 +18,7 @@ pip:
 Use a scan that produces a B0 directly on the scanner. And additionally, the B1 acquisition is 2 different scans with different flip angles (60, 120).
 
 ## Selector
-A selector for this module should run on dcm_study level as it takes data from the 4 different scans (B0 map (with and without shim), B1 60 and B1 120). 
+A selector for this module should run on dcm_study level as it takes data from the 5 different scans ((gantry) B0 map (with and without shim), B1 60 and B1 120). 
 
 ### Input data
 dcm_study
@@ -28,7 +28,7 @@ dcm_study
 Contains filters to select proper acquisitions for each test, based on ImageType and SeriesDescription
 
 ### Meta
-Currently, no limits are defined. 
+Limits & analysis are based on https://doi.org/10.3389/fphy.2022.891600
 
 ### Rules
 StationName, PatientName
@@ -36,22 +36,19 @@ StationName, PatientName
 ## Analysis
 - B0 (with and without shim)
 	- Select B0 maps
-	- Create spheres from geometric center
-	- Calculate statistics in spheres
+	- Create cilinder (35 cm diameter)
+	- Calculate statistics in cilinder
 - B1
 	- Select scans (flip angle 60 and 120)
 	- Calculate B1 map
-	- Calculate statistics in 15 cm sphere
+	- Calculate statistics in 35 cm circle (central slice)
 
 ## Results
 - B0 figures
-	- B0 maps over all slices
-	- Spherical masks (center slice shown)
-	- B0 distributions
+	- B0 maps from central slice
 - B0 statistics
-	- RMS per sphere size and slice
-	- Percentiles per slice (p5, p25, p50, p75, p95)
+	- Average, standard deviation, p99-p1 range
 - B1 figures
 	- Flipangle 60 and 120, B1 map, B1map with mask, Profiles through B1 map
 - B1 statistics 
-	- Mean and stdev within mask
+	-  Average, standard deviation, p99-p1 range
