@@ -126,6 +126,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_TRA_mean",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
                 -0.88,
 				-0.83,
@@ -144,6 +145,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_TRA_p99-p1",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
                 1.44,
                 1.58,
@@ -162,6 +164,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_COR_mean",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
                 0.15,
                 0.18,
@@ -180,6 +183,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_COR_p99-p1",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
 				0.75,           
                 0.86,
@@ -198,6 +202,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_SAG_mean",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
                 0.24,
                 0.25,
@@ -216,6 +221,7 @@
             "display_level": 2,
             "display_name": "B0_NOSHIM_SAG_p99-p1",
             "units": "ppm",
+            "constraint_is_active": false,
             "constraint_minlowhighmax": [
 				0.97,       
                 1.03,
